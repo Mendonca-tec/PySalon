@@ -2,7 +2,7 @@ import os
 import time 
 from src.dados import carregar_usuarios, salvar_usuarios
 from src.servicos import carregar_catalogo, listar_servicos
-from src.agendamento import horarios_disponiveis, carregar_agendamentos, adicionar_agendamento 
+from src.agendamentos import horarios_disponiveis, carregar_agendamentos, adicionar_agendamento 
 from datetime import datetime
 escolha = None
 
