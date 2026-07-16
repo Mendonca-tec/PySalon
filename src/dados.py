@@ -55,7 +55,11 @@ def garantir_admin_padrao():
     '''Verifica se já existe algum usuário com tipo "admin". Se não existir
     (por exemplo, primeira execução do sistema, ou usuarios.json apagado),
     cria um administrador padrão automaticamente, para que sempre haja
-    alguém capaz de acessar o menu administrativo.i.'''
+    alguém capaz de acessar o menu administrativo.
+
+    ATENÇÃO: a senha abaixo é fixa e fica visível no código-fonte — serve
+    apenas para desenvolvimento/testes. Antes de usar o sistema "de verdade",
+    troque a senha pelo próprio menu (alterar senha) ou edite o valor aqui.'''
     usuarios = carregar_usuarios()
 
     tem_admin = any(u.get("tipo") == "admin" for u in usuarios.values())
@@ -67,8 +71,9 @@ def garantir_admin_padrao():
         "nome": "Administrador",
         "email": "admin@salao.com",
         "telefone": "0000-0000",
-        "senha": "123456",
+        "senha": "admin123",
         "tipo": "admin",
+        "status": "ativo",
     }
     salvar_usuarios(usuarios)
     print("| Admin padrão criado (email: admin@salao.com | senha: admin123)")
