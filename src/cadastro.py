@@ -63,6 +63,7 @@ def criar_conta(usuarios):
             "telefone": telefone.strip(),
             "senha": senha,
             "tipo": "cliente",
+            "status": "ativo",
         }
 
         # Persiste a alteração no arquivo JSON
