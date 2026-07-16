@@ -27,7 +27,7 @@ def _carregar(caminho, padrao):
         with open(caminho, "r", encoding="utf-8") as arquivo:
             return json.load(arquivo)
     except (json.JSONDecodeError, FileNotFoundError):
-        # Arquivo vazio: recria com o padrão em vez de travar
+        # Arquivo vazio/corrompido: recria com o padrão em vez de travar
         _salvar(caminho, padrao)
         return padrao
 
@@ -39,7 +39,9 @@ def _salvar(caminho, dados):
         json.dump(dados, arquivo, ensure_ascii=False, indent=4)
 
 
-# Usuários= { "id_do_usuario": {"nome", "email", "senha", "telefone", "tipo": "cliente"|"admin"} }
+# ---------------- Usuários ----------------
+# Estrutura sugerida no documento:
+# { "id_do_usuario": {"nome", "email", "senha", "telefone", "tipo": "cliente"|"admin"} }
 
 def carregar_usuarios():
     return _carregar(ARQ_USUARIOS, {})
@@ -49,7 +51,30 @@ def salvar_usuarios(usuarios):
     _salvar(ARQ_USUARIOS, usuarios)
 
 
-#  Serviços
+def garantir_admin_padrao():
+    '''Verifica se já existe algum usuário com tipo "admin". Se não existir
+    (por exemplo, primeira execução do sistema, ou usuarios.json apagado),
+    cria um administrador padrão automaticamente, para que sempre haja
+    alguém capaz de acessar o menu administrativo.i.'''
+    usuarios = carregar_usuarios()
+
+    tem_admin = any(u.get("tipo") == "admin" for u in usuarios.values())
+    if tem_admin:
+        return
+
+    usuarios["admin"] = {
+        "id": "admin",
+        "nome": "Administrador",
+        "email": "admin@salao.com",
+        "telefone": "0000-0000",
+        "senha": "123456",
+        "tipo": "admin",
+    }
+    salvar_usuarios(usuarios)
+    print("| Admin padrão criado (email: admin@salao.com | senha: admin123)")
+
+
+# ---------------- Serviços ----------------
 
 def carregar_servicos():
     return _carregar(ARQ_SERVICOS, {})
@@ -59,7 +84,7 @@ def salvar_servicos(servicos):
     _salvar(ARQ_SERVICOS, servicos)
 
 
-#  Agendamentos
+# ---------------- Agendamentos ----------------
 
 def carregar_agendamentos():
     return _carregar(ARQ_AGENDAMENTOS, {})
